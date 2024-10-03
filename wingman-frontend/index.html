@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wingman - AI Job Seeking Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth-check.js"></script>
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+    <div id="app-content" style="display: none;">
+        <div class="container mt-5">
+            <h1 class="mb-4">Wingman - AI Job Seeking Assistant</h1>
+            
+            <!-- Make sure this button is outside of any forms -->
+            <button type="button" id="logout-btn" class="btn btn-secondary mb-3">Logout</button>
+            
+            <!-- Add this button for toggling requirements -->
+            <button id="toggle-requirements-btn" class="btn btn-primary mb-3">Show/Hide Requirements</button>
+            
+            <div id="requirements-form" style="display: none;">
+                <h2>Job Requirements</h2>
+                <form id="job-requirements">
+                    <div class="mb-3">
+                        <label for="job-title" class="form-label">Desired Job Title</label>
+                        <input type="text" class="form-control" id="job-title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="salary-range" class="form-label">Salary Range</label>
+                        <input type="text" class="form-control" id="salary-range" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="work-arrangement" class="form-label">Work Arrangement</label>
+                        <select class="form-select" id="work-arrangement" required>
+                            <option value="">Choose...</option>
+                            <option value="remote">Remote</option>
+                            <option value="onsite">Onsite</option>
+                            <option value="hybrid">Hybrid</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="vacation-time" class="form-label">Minimum Vacation Time (days/year)</label>
+                        <input type="number" class="form-control" id="vacation-time" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="additional-instructions" class="form-label">Additional Instructions</label>
+                        <textarea class="form-control" id="additional-instructions" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Requirements</button>
+                </form>
+            </div>
+
+            <div id="chat-area" class="mt-5" style="display: none;">
+                <h2>Chat with Wingman</h2>
+                <div id="chat-messages" class="border p-3 mb-3" style="height: 300px; overflow-y: auto;"></div>
+                <form id="chat-form">
+                    <div class="mb-3">
+                        <label for="recruiter-message" class="form-label">Paste Recruiter's Message</label>
+                        <textarea class="form-control" id="recruiter-message" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Get Wingman's Response</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
