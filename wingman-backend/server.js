@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const axios = require('axios');
 
 const app = express();
 
@@ -82,28 +83,80 @@ app.get('/chat-history', authenticateToken, async (req, res) => {
   }
 });
 
-// Add message to chat history
-app.post('/chat', authenticateToken, async (req, res) => {
+// Protected chat route
+app.post('/api/chat', authenticateToken, async (req, res) => {
   try {
-    const { message } = req.body;
-    let chatHistory = await ChatHistory.findOne({ userId: req.user.userId });
-    
+    const { recruiterMessage, jobRequirements } = req.body;
+    const userId = req.user.userId;
+
+    // Fetch existing chat history from MongoDB
+    let chatHistory = await ChatHistory.findOne({ userId });
     if (!chatHistory) {
-      chatHistory = new ChatHistory({ userId: req.user.userId, messages: [] });
+      chatHistory = new ChatHistory({ userId, messages: [] });
     }
-    
-    chatHistory.messages.push({ role: 'user', content: message });
-    
-    // Here you would typically generate an AI response
-    const aiResponse = "This is a placeholder AI response.";
-    chatHistory.messages.push({ role: 'assistant', content: aiResponse });
-    
+
+    const messages = [
+      {
+        role: "system",
+        content: `You are Wingman, an AI assistant helping job seekers respond to recruiter messages. 
+        The job seeker has the following requirements:
+        - Desired Job Title: ${jobRequirements.title}
+        - Salary Range: ${jobRequirements.salaryRange}
+        - Work Arrangement: ${jobRequirements.workArrangement}
+        - Minimum Vacation Time: ${jobRequirements.vacationTime} days/year
+        - Additional Instructions: ${jobRequirements.additionalInstructions}
+        
+        Your task is to craft a polite and professional response to the recruiter's message, 
+        asking for more information about the job opportunity and how it aligns with the job seeker's requirements. 
+        Be concise but thorough in your response.
+
+        Response Strategy:
+        - If work arrangements, salary, or other key details aren't provided in the initial message, request additional information before declining.
+        - Politely decline opportunities that do not meet the specified criteria while expressing openness to future opportunities that better align.
+        - If an opportunity is not of interest, mention a preference for being kept in mind for fully remote, direct hire roles.
+
+        Communication Preferences:
+        - Provide only the final version of response messages for easy copying.
+        - Focus on concise, professional language in all responses.
+        - If necessary, guide the recruiter to clarify role details before making a decision.`
+      },
+      ...chatHistory.messages,
+      {
+        role: "user",
+        content: `Recruiter's message: ${recruiterMessage}`
+      }
+    ];
+
+    const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+      model: "gpt-4",
+      messages: messages,
+      max_tokens: 300,
+      n: 1,
+      temperature: 0.7,
+    }, {
+      headers: {
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const aiResponse = response.data.choices[0].message.content.trim();
+
+    // Update chat history in MongoDB
+    chatHistory.messages.push({ role: "user", content: recruiterMessage });
+    chatHistory.messages.push({ role: "assistant", content: aiResponse });
+
+    // Limit chat history to last 20 messages
+    if (chatHistory.messages.length > 20) {
+      chatHistory.messages = chatHistory.messages.slice(-20);
+    }
+
     await chatHistory.save();
-    
-    res.json({ message: aiResponse });
+
+    res.json({ response: aiResponse });
   } catch (error) {
-    console.error('Error in chat:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error:', error.response ? error.response.data : error.message);
+    res.status(500).json({ error: 'An error occurred while processing your request.' });
   }
 });
 

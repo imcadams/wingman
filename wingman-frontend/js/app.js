@@ -213,13 +213,14 @@ async function handleChatSubmission(e) {
     e.preventDefault();
     
     const recruiterMessage = document.getElementById('recruiter-message').value;
+    const jobRequirements = JSON.parse(localStorage.getItem('jobRequirements'));
     
     // Display recruiter's message in chat
     addMessageToChat('Recruiter', recruiterMessage);
 
     // Get AI response
     try {
-        const aiResponse = await getAIResponse(recruiterMessage);
+        const aiResponse = await getAIResponse(recruiterMessage, jobRequirements);
         // Display AI response in chat
         addMessageToChat('Wingman', aiResponse);
     } catch (error) {
@@ -240,7 +241,7 @@ function addMessageToChat(sender, message) {
 }
 
 // Updated function to get AI response from the backend server
-async function getAIResponse(recruiterMessage) {
+async function getAIResponse(recruiterMessage, jobRequirements) {
     const authToken = localStorage.getItem('authToken');
     if (!authToken) {
         window.location.href = '/auth.html';
@@ -271,5 +272,3 @@ async function getAIResponse(recruiterMessage) {
     const data = await response.json();
     return data.response; // Return the 'response' property of the data
 }
-
-// You'll need to add UI elements for login and registration, and call the login and register functions accordingly
