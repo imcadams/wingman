@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const jobRequirementsSchema = new mongoose.Schema({
-  title: String,
+  jobTitle: String,
   salaryRange: String,
   workArrangement: String,
   vacationTime: String,
