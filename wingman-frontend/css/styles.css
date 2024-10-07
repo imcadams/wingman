@@ -48,3 +48,30 @@
     text-align: center;
     width: 100%;
 }
+
+#chat-form .input-group {
+    position: relative;
+}
+
+#chat-form .form-control {
+    padding-right: 40px;
+}
+
+#chat-form .send-icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    z-index: 5;
+}
+
+#chat-form .send-icon:hover {
+    color: #0056b3;
+}

@@ -10,6 +10,7 @@
     <script src="js/auth-check.js"></script>
     <script src="js/config.js"></script>
     <script src="js/app.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
     <div id="app-content" style="display: none;">
@@ -57,11 +58,13 @@
             <div id="chat-area" class="mt-5">
                 <h2>Chat with JobReplyAI</h2>
                 <div id="chat-messages" class="border p-3 mb-3" style="height: 300px; overflow-y: auto;"></div>
-                <form id="chat-form" class="d-flex">
-                    <div class="flex-grow-1 me-2">
+                <form id="chat-form">
+                    <div class="input-group">
                         <input type="text" class="form-control" id="recruiter-message" placeholder="Type your message..." required>
+                        <span class="input-group-text send-icon" id="send-message">
+                            <i class="fas fa-paper-plane"></i>
+                        </span>
                     </div>
-                    <button type="submit" class="btn btn-primary">Send</button>
                 </form>
             </div>
         </div>

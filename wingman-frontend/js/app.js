@@ -17,14 +17,19 @@ async function initApp() {
     }
 
     const chatForm = document.getElementById('chat-form');
-    const recruiterMessageTextarea = document.getElementById('recruiter-message');
+    const recruiterMessageInput = document.getElementById('recruiter-message');
+    const sendIcon = document.getElementById('send-message');
 
     if (chatForm) {
         chatForm.addEventListener('submit', handleChatSubmission);
     }
 
-    if (recruiterMessageTextarea) {
-        recruiterMessageTextarea.addEventListener('keydown', handleTextareaKeydown);
+    if (recruiterMessageInput) {
+        recruiterMessageInput.addEventListener('keydown', handleTextareaKeydown);
+    }
+
+    if (sendIcon) {
+        sendIcon.addEventListener('click', handleSendIconClick);
     }
 
     // Add event listener for the toggle button
@@ -219,6 +224,17 @@ async function handleChatSubmission(event) {
         addMessageToChat('System', `Error: ${error.message}`);
     }
 
-    // Clear the textarea
+    // Clear the input
     document.getElementById('recruiter-message').value = '';
 }
+
+// Add this new function to handle send icon click
+function handleSendIconClick(event) {
+    event.preventDefault();
+    handleChatSubmission(event);
+}
+
+// Make sure this is the only place where initApp is called
+document.addEventListener('DOMContentLoaded', initApp);
+
+// Remove any other calls to initApp or duplicate definitions
