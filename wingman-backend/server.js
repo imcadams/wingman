@@ -1,4 +1,5 @@
-require('dotenv').config();
+require('dotenv').config(); // This loads the .env file if it exists
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
@@ -8,14 +9,31 @@ const axios = require('axios');
 
 const app = express();
 
+// Use environment variables for configuration
+const PORT = process.env.PORT || 3000;
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/wingman';
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:3000'];
+
 // Import models
 const User = require('./models/User');
 const ChatHistory = require('./models/ChatHistory');
 
-app.use(cors());
+// CORS configuration
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin || ALLOWED_ORIGINS.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json());
 
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Could not connect to MongoDB', err));
 
@@ -39,7 +57,7 @@ app.post('/login', async (req, res) => {
 
     const token = jwt.sign(
       { userId: user._id },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: '1h' }
     );
 
@@ -62,7 +80,7 @@ function authenticateToken(req, res, next) {
   
   if (token == null) return res.sendStatus(401);
   
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+  jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
     req.user = user;
     next();
@@ -187,5 +205,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'An unexpected error occurred' });
 });
 
-const port = process.env.PORT || 8080;
-app.listen(port, () => console.log(`Server running on port ${port}`));
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});

@@ -84,12 +84,17 @@ function showMessage(message, type) {
 
 async function login(username, password) {
     try {
-        const response = await fetch(`http://localhost:3000/login`, {
+        console.log('Attempting login with:', { username, password: '****' });
+        console.log('Fetching from URL:', `${CONFIG.API_URL}/login`);
+
+        const response = await fetch(`${CONFIG.API_URL}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ username, password }),
+            mode: 'cors',
+            credentials: 'include',
         });
 
         if (!response.ok) {

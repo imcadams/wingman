@@ -1,16 +1,20 @@
-// Store job requirements and authentication token
+// Replace SERVER_URLS with a single API_URL
+const API_URL = CONFIG.API_URL;// Store job requirements and authentication token
+
 let jobRequirements = {};
 let authToken = localStorage.getItem('authToken');
 
 // Function to handle login
 async function login(username, password) {
     try {
-        const response = await fetch('http://localhost:3000/login', {
+        const response = await fetch(`${API_URL}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ username, password }),
+            mode: 'cors',
+            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -30,7 +34,7 @@ async function login(username, password) {
 // Function to handle registration
 async function register(username, password) {
     try {
-        const response = await fetch('http://localhost:3000/register', {
+        const response = await fetch(`${API_URL}/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -138,7 +142,7 @@ async function saveJobRequirements(jobRequirements) {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/api/job-requirements', {
+        const response = await fetch(`${API_URL}/api/job-requirements`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -248,7 +252,7 @@ async function getAIResponse(recruiterMessage, jobRequirements) {
         return;
     }
 
-    const response = await fetch('http://localhost:3000/api/chat', {
+    const response = await fetch(`${API_URL}/api/chat`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
