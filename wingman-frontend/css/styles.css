@@ -13,6 +13,28 @@
     background-color: #f8f9fa;
 }
 
+/* Media query for larger screens */
+@media (min-width: 1200px) {
+    #chat-area {
+        max-width: 800px;
+    }
+
+    #chat-messages {
+        height: 600px;
+    }
+}
+
+/* Media query for even larger screens */
+@media (min-width: 1600px) {
+    #chat-area {
+        max-width: 1000px;
+    }
+
+    #chat-messages {
+        height: 800px;
+    }
+}
+
 #chat-form {
     display: flex;
     align-items: center;
