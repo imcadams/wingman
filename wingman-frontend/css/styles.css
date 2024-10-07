@@ -24,23 +24,26 @@
 }
 
 .chat-message {
-    margin-bottom: 0.5rem;
-    padding: 0.5rem;
-    border-radius: 0.25rem;
-    max-width: 80%;    
+    position: relative;
+    margin-bottom: 10px;
     word-wrap: break-word;
+    padding-bottom: 25px; /* Add space for the copy button */
 }
 
 .user-message {
     background-color: #e9ecef;
-    align-self: flex-start;
+    border-radius: 15px;
+    padding: 10px;
+    max-width: 80%;
 }
 
 .ai-message {
     background-color: #007bff;
     color: white;
-    align-self: flex-end;
+    border-radius: 15px;
+    padding: 10px;
     margin-left: auto;
+    max-width: 80%;
 }
 
 .system-message {
@@ -92,4 +95,25 @@
 .message-content {
     white-space: pre-wrap;
     font-family: inherit;
+}
+
+.copy-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+    padding: 5px; /* Add some padding for easier clicking */
+}
+
+.copy-button:hover {
+    opacity: 1;
+}
+
+.ai-message .copy-button {
+    color: white;
 }

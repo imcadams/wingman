@@ -45,6 +45,22 @@ async function initApp() {
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     })
+
+    // Initialize a tooltip for copy buttons
+    document.body.addEventListener('click', function(e) {
+        if (e.target.closest('.copy-button')) {
+            var button = e.target.closest('.copy-button');
+            var tooltip = bootstrap.Tooltip.getInstance(button);
+            if (!tooltip) {
+                tooltip = new bootstrap.Tooltip(button, {
+                    title: 'Copied!',
+                    trigger: 'manual'
+                });
+            }
+            tooltip.show();
+            setTimeout(() => tooltip.hide(), 2000);
+        }
+    });
 }
 
 async function handleLogout() {
@@ -170,6 +186,24 @@ function addMessageToChat(sender, message) {
     
     messageElement.innerHTML = `<strong>${sender}:</strong> `;
     messageElement.appendChild(contentWrapper);
+    
+    // Add copy button for AI messages
+    if (sender === 'JobReplyAI') {
+        const copyButton = document.createElement('button');
+        copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+        copyButton.className = 'copy-button';
+        copyButton.title = 'Copy to clipboard';
+        copyButton.onclick = function() {
+            navigator.clipboard.writeText(message).then(() => {
+                // Temporarily change the icon to indicate successful copy
+                copyButton.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => {
+                    copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+                }, 2000);
+            });
+        };
+        messageElement.appendChild(copyButton);
+    }
     
     chatMessages.appendChild(messageElement);
     chatMessages.scrollTop = chatMessages.scrollHeight;
