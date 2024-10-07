@@ -4,19 +4,6 @@ const API_URL = CONFIG.API_URL;// Store job requirements and authentication toke
 let jobRequirements = {};
 let authToken = localStorage.getItem('authToken');
 
-// Logout functionality
-function setupLogout() {
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function() {
-            localStorage.removeItem('authToken');
-            window.location.href = '/auth.html';
-        });
-    } else {
-        console.error('Logout button not found');
-    }
-}
-
 // Function to initialize the app
 async function initApp() {
     const logoutBtn = document.getElementById('logout-btn');
@@ -146,9 +133,6 @@ function toggleRequirementsForm() {
 // Run initApp when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', initApp);
 
-// Handle job requirements form submission
-document.getElementById('job-requirements').addEventListener('submit', handleJobRequirements);
-
 // Function to add a message to the chat area
 function addMessageToChat(sender, message) {
     const chatMessages = document.getElementById('chat-messages');
@@ -238,30 +222,3 @@ async function handleChatSubmission(event) {
     // Clear the textarea
     document.getElementById('recruiter-message').value = '';
 }
-
-// Make sure to update the event listener for the Enter key
-function handleInputKeydown(event) {
-    if (event.key === 'Enter' && !event.shiftKey) {
-        event.preventDefault();
-        handleChatSubmission(event);
-    }
-}
-
-function initApp() {
-    // ... existing initialization code ...
-
-    const chatForm = document.getElementById('chat-form');
-    const recruiterMessageInput = document.getElementById('recruiter-message');
-
-    if (chatForm) {
-        chatForm.addEventListener('submit', handleChatSubmission);
-    }
-
-    if (recruiterMessageInput) {
-        recruiterMessageInput.addEventListener('keydown', handleInputKeydown);
-    }
-
-    // ... rest of the initialization ...
-}
-
-// ... rest of your existing code ...
