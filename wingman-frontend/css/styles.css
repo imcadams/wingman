@@ -1,16 +1,35 @@
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
 #chat-area {
-    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 200px); /* Adjust this value as needed */
+    max-width: 1000px;
     margin: 0 auto;
 }
 
 #chat-messages {
-    height: 400px;
+    flex-grow: 1;
     overflow-y: auto;
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
     padding: 1rem;
     margin-bottom: 1rem;
     background-color: #f8f9fa;
+}
+
+#chat-form {
+    margin-top: auto;
+}
+
+/* Media query for smaller screens */
+@media (max-height: 600px) {
+    #chat-area {
+        height: calc(100vh - 150px); /* Adjust for smaller screens */
+    }
 }
 
 /* Media query for larger screens */
