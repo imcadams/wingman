@@ -116,7 +116,7 @@ app.post('/api/chat', authenticateToken, async (req, res) => {
     const messages = [
       {
         role: "system",
-        content: `You are Wingman, an AI assistant helping job seekers respond to recruiter messages. 
+        content: `You are JobReplyAI, an AI assistant helping job seekers respond to recruiter messages. 
         The job seeker has the following requirements:
         - Desired Job Title: ${jobRequirements.title}
         - Salary Range: ${jobRequirements.salaryRange}
