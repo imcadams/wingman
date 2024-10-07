@@ -297,9 +297,9 @@ function handleTextareaKeydown(event) {
 async function handleChatSubmission(event) {
     event.preventDefault();
     
-    const recruiterMessage = document.getElementById('recruiter-message').value;
+    const recruiterMessage = document.getElementById('recruiter-message').value.trim();
     
-    if (!recruiterMessage.trim()) {
+    if (!recruiterMessage) {
         // If the message is empty or only whitespace, don't submit
         return;
     }
@@ -309,17 +309,24 @@ async function handleChatSubmission(event) {
     // Display user's message in chat
     addMessageToChat('User', recruiterMessage);
 
+    // Clear the input
+    document.getElementById('recruiter-message').value = '';
+
+    // Add loading message
+    const loadingMessage = addLoadingMessage();
+
     // Get AI response
     try {
         const aiResponse = await getAIResponse(recruiterMessage, jobRequirements);
+        // Remove loading message
+        loadingMessage.remove();
         // Display AI response in chat
         addMessageToChat('JobReplyAI', aiResponse);
     } catch (error) {
+        // Remove loading message
+        loadingMessage.remove();
         addMessageToChat('System', `Error: ${error.message}`);
     }
-
-    // Clear the input
-    document.getElementById('recruiter-message').value = '';
 }
 
 // Add this new function to handle send icon click
@@ -332,3 +339,13 @@ function handleSendIconClick(event) {
 document.addEventListener('DOMContentLoaded', initApp);
 
 // Remove any other calls to initApp or duplicate definitions
+
+function addLoadingMessage() {
+    const chatMessages = document.getElementById('chat-messages');
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'loading';
+    loadingDiv.textContent = 'JobReplyAI is thinking...';
+    chatMessages.appendChild(loadingDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return loadingDiv;
+}
