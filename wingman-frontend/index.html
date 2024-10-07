@@ -56,11 +56,16 @@
             </div>
 
             <div id="chat-area" class="mt-5">
-                <h2>Chat with JobReplyAI</h2>
+                <h2>
+                    Chat with JobReplyAI
+                    <span class="info-icon" data-bs-toggle="tooltip" data-bs-placement="right" title="Paste recruiter's email or type your message in the input box below. Press Enter or click the send icon to get an AI-generated reply based on your job requirements.">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                </h2>
                 <div id="chat-messages" class="border p-3 mb-3" style="height: 300px; overflow-y: auto;"></div>
                 <form id="chat-form">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="recruiter-message" placeholder="Type your message..." required>
+                        <input type="text" class="form-control" id="recruiter-message" placeholder="Paste recruiter's email or type your message..." required>
                         <span class="input-group-text send-icon" id="send-message">
                             <i class="fas fa-paper-plane"></i>
                         </span>

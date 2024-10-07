@@ -75,3 +75,14 @@
 #chat-form .send-icon:hover {
     color: #0056b3;
 }
+
+.info-icon {
+    font-size: 0.8em;
+    color: #007bff;
+    cursor: pointer;
+    margin-left: 0.5em;
+}
+
+.info-icon:hover {
+    color: #0056b3;
+}
