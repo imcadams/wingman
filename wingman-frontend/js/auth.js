@@ -100,7 +100,7 @@ async function login(username, password) {
         }
 
         // Redirect to the main page
-        window.location.href = '/index.html';
+        window.location.href = '/job-reply-ai.html';
     } catch (error) {
         console.error('Login error:', error);
         showMessage(error.message, 'danger');
