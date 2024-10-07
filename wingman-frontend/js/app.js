@@ -30,15 +30,21 @@ async function initApp() {
     }
 
     const chatForm = document.getElementById('chat-form');
+    const recruiterMessageTextarea = document.getElementById('recruiter-message');
+
     if (chatForm) {
         chatForm.addEventListener('submit', handleChatSubmission);
+    }
+
+    if (recruiterMessageTextarea) {
+        recruiterMessageTextarea.addEventListener('keydown', handleTextareaKeydown);
     }
 
     // Add event listener for the toggle button
     const toggleRequirementsBtn = document.getElementById('toggle-requirements-btn');
     if (toggleRequirementsBtn) {
         toggleRequirementsBtn.addEventListener('click', toggleRequirementsForm);
-    }
+    }    
 
     await loadJobRequirements();
 }
@@ -143,33 +149,20 @@ document.addEventListener('DOMContentLoaded', initApp);
 // Handle job requirements form submission
 document.getElementById('job-requirements').addEventListener('submit', handleJobRequirements);
 
-// Handle chat form submission
-async function handleChatSubmission(e) {
-    e.preventDefault();
-    
-    const recruiterMessage = document.getElementById('recruiter-message').value;
-    const jobRequirements = JSON.parse(localStorage.getItem('jobRequirements'));
-    
-    // Display recruiter's message in chat
-    addMessageToChat('Recruiter', recruiterMessage);
-
-    // Get AI response
-    try {
-        const aiResponse = await getAIResponse(recruiterMessage, jobRequirements);
-        // Display AI response in chat
-        addMessageToChat('Wingman', aiResponse);
-    } catch (error) {
-        addMessageToChat('System', `Error: ${error.message}`);
-    }
-
-    // Clear the textarea
-    document.getElementById('recruiter-message').value = '';
-}
-
 // Function to add a message to the chat area
 function addMessageToChat(sender, message) {
     const chatMessages = document.getElementById('chat-messages');
     const messageElement = document.createElement('div');
+    messageElement.classList.add('chat-message');
+    
+    if (sender === 'Recruiter') {
+        messageElement.classList.add('recruiter-message');
+    } else if (sender === 'JobReplyAI') {
+        messageElement.classList.add('ai-message');
+    } else {
+        messageElement.classList.add('system-message');
+    }
+    
     messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
     chatMessages.appendChild(messageElement);
     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -207,3 +200,68 @@ async function getAIResponse(recruiterMessage, jobRequirements) {
     const data = await response.json();
     return data.response; // Return the 'response' property of the data
 }
+
+// Function to handle textarea keydown event
+function handleTextareaKeydown(event) {
+    // Check if the pressed key is Enter and the Shift key is not held down
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault(); // Prevent the default action (newline)
+        handleChatSubmission(event);
+    }
+}
+
+// Handle chat form submission
+async function handleChatSubmission(event) {
+    event.preventDefault();
+    
+    const recruiterMessage = document.getElementById('recruiter-message').value.trim();
+    
+    if (!recruiterMessage) {
+        // If the message is empty or only whitespace, don't submit
+        return;
+    }
+
+    const jobRequirements = JSON.parse(localStorage.getItem('jobRequirements') || '{}');
+    
+    // Display recruiter's message in chat
+    addMessageToChat('Recruiter', recruiterMessage);
+
+    // Get AI response
+    try {
+        const aiResponse = await getAIResponse(recruiterMessage, jobRequirements);
+        // Display AI response in chat
+        addMessageToChat('JobReplyAI', aiResponse);
+    } catch (error) {
+        addMessageToChat('System', `Error: ${error.message}`);
+    }
+
+    // Clear the textarea
+    document.getElementById('recruiter-message').value = '';
+}
+
+// Make sure to update the event listener for the Enter key
+function handleInputKeydown(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        handleChatSubmission(event);
+    }
+}
+
+function initApp() {
+    // ... existing initialization code ...
+
+    const chatForm = document.getElementById('chat-form');
+    const recruiterMessageInput = document.getElementById('recruiter-message');
+
+    if (chatForm) {
+        chatForm.addEventListener('submit', handleChatSubmission);
+    }
+
+    if (recruiterMessageInput) {
+        recruiterMessageInput.addEventListener('keydown', handleInputKeydown);
+    }
+
+    // ... rest of the initialization ...
+}
+
+// ... rest of your existing code ...

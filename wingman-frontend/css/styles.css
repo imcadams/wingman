@@ -1,0 +1,50 @@
+#chat-area {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#chat-messages {
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #f8f9fa;
+}
+
+#chat-form {
+    display: flex;
+    align-items: center;
+}
+
+#recruiter-message {
+    flex-grow: 1;
+    margin-right: 0.5rem;
+}
+
+.chat-message {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    max-width: 80%;
+}
+
+.recruiter-message {
+    background-color: #e9ecef;
+    align-self: flex-start;
+}
+
+.ai-message {
+    background-color: #007bff;
+    color: white;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.system-message {
+    background-color: #ffc107;
+    align-self: center;
+    text-align: center;
+    width: 100%;
+}
