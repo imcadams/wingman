@@ -144,8 +144,11 @@ function addMessageToChat(sender, message) {
     const messageElement = document.createElement('div');
     messageElement.classList.add('chat-message');
     
-    if (sender === 'Recruiter') {
-        messageElement.classList.add('recruiter-message');
+    const userName = localStorage.getItem('userName') || 'User';
+    
+    if (sender === 'User') {
+        messageElement.classList.add('user-message');
+        sender = userName; // Use the stored username
     } else if (sender === 'JobReplyAI') {
         messageElement.classList.add('ai-message');
     } else {
@@ -212,8 +215,8 @@ async function handleChatSubmission(event) {
 
     const jobRequirements = JSON.parse(localStorage.getItem('jobRequirements') || '{}');
     
-    // Display recruiter's message in chat
-    addMessageToChat('Recruiter', recruiterMessage);
+    // Display user's message in chat
+    addMessageToChat('User', recruiterMessage);
 
     // Get AI response
     try {

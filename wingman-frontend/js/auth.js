@@ -91,7 +91,8 @@ async function login(username, password) {
 
         localStorage.setItem('authToken', responseData.token);
         localStorage.setItem('userId', responseData.userId);
-        
+        localStorage.setItem('userName', username); // Store the username
+
         if (responseData.jobRequirements) {
             localStorage.setItem('jobRequirements', JSON.stringify(responseData.jobRequirements));
         } else {
