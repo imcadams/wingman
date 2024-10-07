@@ -18,7 +18,7 @@
     align-items: center;
 }
 
-#recruiter-message {
+#user-message {
     flex-grow: 1;
     margin-right: 0.5rem;
 }
@@ -30,7 +30,7 @@
     max-width: 80%;
 }
 
-.recruiter-message {
+.user-message {
     background-color: #e9ecef;
     align-self: flex-start;
 }
