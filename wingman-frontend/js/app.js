@@ -161,7 +161,16 @@ function addMessageToChat(sender, message) {
         messageElement.classList.add('system-message');
     }
     
-    messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+    // Create a wrapper for the message content
+    const contentWrapper = document.createElement('div');
+    contentWrapper.classList.add('message-content');
+    
+    // Use innerText to preserve line breaks, then replace them with <br> tags
+    contentWrapper.innerHTML = message.replace(/\n/g, '<br>');
+    
+    messageElement.innerHTML = `<strong>${sender}:</strong> `;
+    messageElement.appendChild(contentWrapper);
+    
     chatMessages.appendChild(messageElement);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
@@ -212,9 +221,9 @@ function handleTextareaKeydown(event) {
 async function handleChatSubmission(event) {
     event.preventDefault();
     
-    const recruiterMessage = document.getElementById('recruiter-message').value.trim();
+    const recruiterMessage = document.getElementById('recruiter-message').value;
     
-    if (!recruiterMessage) {
+    if (!recruiterMessage.trim()) {
         // If the message is empty or only whitespace, don't submit
         return;
     }

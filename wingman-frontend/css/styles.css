@@ -27,7 +27,8 @@
     margin-bottom: 0.5rem;
     padding: 0.5rem;
     border-radius: 0.25rem;
-    max-width: 80%;
+    max-width: 80%;    
+    word-wrap: break-word;
 }
 
 .user-message {
@@ -55,12 +56,13 @@
 
 #chat-form .form-control {
     padding-right: 40px;
+    resize: vertical;
+    min-height: 60px;
 }
 
 #chat-form .send-icon {
     position: absolute;
     right: 0;
-    top: 0;
     bottom: 0;
     background: none;
     border: none;
@@ -68,7 +70,7 @@
     cursor: pointer;
     display: flex;
     align-items: center;
-    padding: 0 15px;
+    padding: 10px 15px;
     z-index: 5;
 }
 
@@ -85,4 +87,9 @@
 
 .info-icon:hover {
     color: #0056b3;
+}
+
+.message-content {
+    white-space: pre-wrap;
+    font-family: inherit;
 }
