@@ -4,66 +4,6 @@ const API_URL = CONFIG.API_URL;// Store job requirements and authentication toke
 let jobRequirements = {};
 let authToken = localStorage.getItem('authToken');
 
-// Function to handle login
-async function login(username, password) {
-    try {
-        const response = await fetch(`${API_URL}/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, password }),
-            mode: 'cors',
-            credentials: 'include'
-        });
-
-        if (!response.ok) {
-            throw new Error('Login failed');
-        }
-
-        const data = await response.json();
-        authToken = data.token;
-        localStorage.setItem('authToken', authToken);
-        return true;
-    } catch (error) {
-        console.error('Login error:', error);
-        return false;
-    }
-}
-
-// Function to handle registration
-async function register(username, password) {
-    try {
-        const response = await fetch(`${API_URL}/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, password })
-        });
-
-        if (!response.ok) {
-            throw new Error('Registration failed');
-        }
-
-        return true;
-    } catch (error) {
-        console.error('Registration error:', error);
-        return false;
-    }
-}
-
-// Check authentication status
-function checkAuth() {
-    const authToken = localStorage.getItem('authToken');
-    if (!authToken) {
-        window.location.href = 'auth.html';
-    }
-}
-
-// Call checkAuth when the page loads
-document.addEventListener('DOMContentLoaded', checkAuth);
-
 // Logout functionality
 function setupLogout() {
     const logoutBtn = document.getElementById('logout-btn');
@@ -134,7 +74,6 @@ function showMessage(message, type) {
 }
 
 async function saveJobRequirements(jobRequirements) {
-    console.log('Saving job requirements:', jobRequirements);
     const token = localStorage.getItem('authToken');
     
     if (!token) {
@@ -156,7 +95,6 @@ async function saveJobRequirements(jobRequirements) {
         }
 
         const data = await response.json();
-        console.log('Job requirements saved successfully:', data);
         
         // Update localStorage with the new job requirements
         localStorage.setItem('jobRequirements', JSON.stringify(data.jobRequirements));
@@ -169,19 +107,15 @@ async function saveJobRequirements(jobRequirements) {
 }
 
 async function loadJobRequirements() {
-    console.log('Loading job requirements...');
     const jobRequirementsString = localStorage.getItem('jobRequirements');
     
     if (jobRequirementsString) {
         try {
             const jobRequirements = JSON.parse(jobRequirementsString);
-            console.log('Job requirements loaded from localStorage:', jobRequirements);
             populateJobRequirementsForm(jobRequirements);
         } catch (error) {
             console.error('Error parsing job requirements:', error);
         }
-    } else {
-        console.log('No job requirements found in localStorage');
     }
 }
 
@@ -205,9 +139,6 @@ function toggleRequirementsForm() {
 
 // Run initApp when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', initApp);
-
-// Add event listener for logout button
-// document.getElementById('logout-btn').addEventListener('click', logout);
 
 // Handle job requirements form submission
 document.getElementById('job-requirements').addEventListener('submit', handleJobRequirements);

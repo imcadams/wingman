@@ -1,20 +1,10 @@
 function initAuth() {
-    console.log('Initializing auth...');
-
     const authForm = document.getElementById('auth-form');
     const toggleAuthBtn = document.getElementById('toggle-auth-btn');
     const submitBtn = document.getElementById('submit-btn');
     const confirmPasswordGroup = document.getElementById('confirm-password-group');
     const confirmPasswordInput = document.getElementById('confirm-password');
     let isLoginMode = true;
-
-    console.log('Elements found:', {
-        authForm,
-        toggleAuthBtn,
-        submitBtn,
-        confirmPasswordGroup,
-        confirmPasswordInput
-    });
 
     if (!authForm) {
         console.error('Auth form not found. Aborting initialization.');
@@ -66,8 +56,6 @@ function initAuth() {
             showMessage(error.message, 'danger');
         }
     });
-
-    console.log('Auth initialization complete');
 }
 
 function showMessage(message, type) {
@@ -84,9 +72,6 @@ function showMessage(message, type) {
 
 async function login(username, password) {
     try {
-        console.log('Attempting login with:', { username, password: '****' });
-        console.log('Fetching from URL:', `${CONFIG.API_URL}/login`);
-
         const response = await fetch(`${CONFIG.API_URL}/login`, {
             method: 'POST',
             headers: {
@@ -103,13 +88,11 @@ async function login(username, password) {
         }
 
         const responseData = await response.json();
-        console.log('Login successful:', responseData);
 
         localStorage.setItem('authToken', responseData.token);
         localStorage.setItem('userId', responseData.userId);
         
         if (responseData.jobRequirements) {
-            console.log('Storing job requirements:', responseData.jobRequirements);
             localStorage.setItem('jobRequirements', JSON.stringify(responseData.jobRequirements));
         } else {
             console.warn('No job requirements received from server');
@@ -124,7 +107,6 @@ async function login(username, password) {
 }
 
 async function signUp(username, password) {
-    console.log('Sign Up:', username, password);
     // Implement your sign up logic here
     // For example:
     try {
@@ -140,18 +122,11 @@ async function signUp(username, password) {
         }
         const data = await response.json();
         // Handle successful sign up (e.g., auto login, redirect)
-        console.log('Sign up successful:', data);
     } catch (error) {
         console.error('Sign up error:', error);
         throw error;
     }
 }
-
-// Try to initialize immediately
-initAuth();
-
-// If that fails, try again when the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', initAuth);
 
 // If that also fails, try one last time when everything is loaded
 window.addEventListener('load', initAuth);
