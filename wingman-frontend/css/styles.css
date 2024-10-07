@@ -139,3 +139,10 @@
 .ai-message .copy-button {
     color: white;
 }
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+    color: #6c757d;
+}

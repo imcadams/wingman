@@ -94,7 +94,9 @@ app.get('/chat-history', authenticateToken, async (req, res) => {
     if (!chatHistory) {
       return res.json({ messages: [] });
     }
-    res.json({ messages: chatHistory.messages });
+    // Return only the last 100 messages
+    const lastHundredMessages = chatHistory.messages.slice(-100);
+    res.json({ messages: lastHundredMessages });
   } catch (error) {
     console.error('Error fetching chat history:', error);
     res.status(500).json({ message: 'Server error' });
@@ -164,9 +166,9 @@ app.post('/api/chat', authenticateToken, async (req, res) => {
     chatHistory.messages.push({ role: "user", content: recruiterMessage });
     chatHistory.messages.push({ role: "assistant", content: aiResponse });
 
-    // Limit chat history to last 20 messages
-    if (chatHistory.messages.length > 20) {
-      chatHistory.messages = chatHistory.messages.slice(-20);
+    // Limit chat history to last 100 messages
+    if (chatHistory.messages.length > 100) {
+      chatHistory.messages = chatHistory.messages.slice(-100);
     }
 
     await chatHistory.save();

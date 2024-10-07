@@ -39,6 +39,7 @@ async function initApp() {
     }    
 
     await loadJobRequirements();
+    await loadChatHistory(); // Add this line
 
     // Initialize tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
@@ -61,6 +62,43 @@ async function initApp() {
             setTimeout(() => tooltip.hide(), 2000);
         }
     });
+}
+
+// Add this new function to load chat history
+async function loadChatHistory() {
+    const chatMessages = document.getElementById('chat-messages');
+    chatMessages.innerHTML = '<div class="loading">Loading chat history...</div>';
+
+    try {
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) {
+            console.error('No auth token found');
+            return;
+        }
+
+        const response = await fetch(`${API_URL}/chat-history`, {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to load chat history');
+        }
+
+        const data = await response.json();
+        chatMessages.innerHTML = ''; // Clear loading message
+
+        data.messages.forEach(message => {
+            addMessageToChat(message.role === 'user' ? 'User' : 'JobReplyAI', message.content, true);
+        });
+
+        // Scroll to the bottom after loading all history
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    } catch (error) {
+        chatMessages.innerHTML = '<div class="loading">Failed to load chat history</div>';
+        console.error('Error loading chat history:', error);
+    }
 }
 
 async function handleLogout() {
@@ -161,7 +199,7 @@ function toggleRequirementsForm() {
 document.addEventListener('DOMContentLoaded', initApp);
 
 // Function to add a message to the chat area
-function addMessageToChat(sender, message) {
+function addMessageToChat(sender, message, isHistory = false) {
     const chatMessages = document.getElementById('chat-messages');
     const messageElement = document.createElement('div');
     messageElement.classList.add('chat-message');
@@ -206,7 +244,11 @@ function addMessageToChat(sender, message) {
     }
     
     chatMessages.appendChild(messageElement);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+    // Only scroll to the bottom if it's not loading history
+    if (!isHistory) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
 }
 
 // Updated function to get AI response from the backend server
